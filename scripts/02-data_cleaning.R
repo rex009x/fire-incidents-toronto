@@ -1,44 +1,47 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Cleans the raw fire incidents data
+# Author: Jimmy Luc
+# Date: 1 April 2024
+# Contact: jimmy.luc@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: Execute the 01-download_data.R script before running this file
 
 #### Workspace setup ####
 library(tidyverse)
+library(janitor)
+library(here)
 
 #### Clean data ####
-raw_data <- read_csv("inputs/data/plane_data.csv")
+# load in raw data
+raw_fire_incidents_data <-
+  read_csv(
+    file=here("data/raw_data/raw_fire_incidents.csv")
+  )
 
-cleaned_data <-
-  raw_data |>
-  janitor::clean_names() |>
-  select(wing_width_mm, wing_length_mm, flying_time_sec_first_timer) |>
-  filter(wing_width_mm != "caw") |>
-  mutate(
-    flying_time_sec_first_timer = if_else(flying_time_sec_first_timer == "1,35",
-                                   "1.35",
-                                   flying_time_sec_first_timer)
-  ) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "490",
-                                 "49",
-                                 wing_width_mm)) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "6",
-                                 "60",
-                                 wing_width_mm)) |>
-  mutate(
-    wing_width_mm = as.numeric(wing_width_mm),
-    wing_length_mm = as.numeric(wing_length_mm),
-    flying_time_sec_first_timer = as.numeric(flying_time_sec_first_timer)
-  ) |>
-  rename(flying_time = flying_time_sec_first_timer,
-         width = wing_width_mm,
-         length = wing_length_mm
-         ) |> 
-  tidyr::drop_na()
+# clean the names and select column of interest
+cleaned_fire_incidents_data <-
+  clean_names(raw_fire_incidents_data) |>
+  select(
+    area_of_origin,
+    estimated_dollar_loss,
+    latitude,
+    longitude,
+    method_of_fire_control,
+    number_of_responding_personnel,
+    possible_cause,
+    property_use,
+    smoke_alarm_at_fire_origin,
+    smoke_alarm_at_fire_origin_alarm_failure,
+    smoke_alarm_at_fire_origin_alarm_type,
+    tfs_alarm_time,
+    tfs_arrival_time
+  )
+
+# TODO clean selected variables of interest (omit NA values)
 
 #### Save data ####
-write_csv(cleaned_data, "outputs/data/analysis_data.csv")
+# write cleaned data as csv
+write_csv(
+  cleaned_fire_incidents_data,
+  "data/analysis_data/cleaned_fire_incidents.csv"
+)

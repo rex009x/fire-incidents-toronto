@@ -1,19 +1,15 @@
 #### Preamble ####
-# Purpose: Simulates... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Simulates an analysis dataset about fire incident occurrences in Toronto.
+# Author: Jimmy Luc
+# Date: 1 April 2024
+# Contact: jimmy.luc@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
 
 
 #### Workspace setup ####
 library(tidyverse)
-# [...UPDATE THIS...]
 
 #### Simulate data ####
-# [...ADD CODE HERE...]
+# TODO set seed for simulation
 
-
-
+# TODO create a simulation dataset with variables of interest following the proper distribution

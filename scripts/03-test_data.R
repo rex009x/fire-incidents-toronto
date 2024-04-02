@@ -1,15 +1,16 @@
 #### Preamble ####
-# Purpose: Tests... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Tests the cleaned data types and values
+# Author: Jimmy Luc
+# Date: 1 April 2024
+# Contact: jimmy.luc@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: Execute the 01-download_data.R and 02-data_cleaning.R scripts before running this file
 
 
 #### Workspace setup ####
 library(tidyverse)
-# [...UPDATE THIS...]
 
 #### Test data ####
+# TODO test data types for variables of interest
+
+# TODO test data values for variables of interest
