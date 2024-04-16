@@ -10,10 +10,11 @@
 #### Workspace setup ####
 library(tidyverse)
 library(here)
+library(arrow)
 
 cleaned_fire_incidents_data <-
-  read_csv(
-    file=here("data/analysis_data/cleaned_fire_incidents.csv")
+  read_parquet(
+    file=here("data/analysis_data/cleaned_fire_incidents.parquet")
   )
 
 #### Test data ####

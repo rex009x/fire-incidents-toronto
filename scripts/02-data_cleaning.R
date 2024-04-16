@@ -55,7 +55,7 @@ cleaned_fire_incidents_data <- cleaned_fire_incidents_data %>%
           tfs_arrival_time)
 
 #### Save data ####
-# write cleaned data as csv
+# write cleaned data as csv and parquet
 write_csv(
   cleaned_fire_incidents_data,
   "data/analysis_data/cleaned_fire_incidents.csv"
