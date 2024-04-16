@@ -10,6 +10,7 @@
 library(tidyverse)
 library(janitor)
 library(here)
+library(arrow)
 
 #### Clean data ####
 # load in raw data
@@ -58,4 +59,9 @@ cleaned_fire_incidents_data <- cleaned_fire_incidents_data %>%
 write_csv(
   cleaned_fire_incidents_data,
   "data/analysis_data/cleaned_fire_incidents.csv"
+)
+
+write_parquet(
+  cleaned_fire_incidents_data,
+  "data/analysis_data/cleaned_fire_incidents.parquet"
 )
