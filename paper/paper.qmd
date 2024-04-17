@@ -22,26 +22,30 @@ bibliography: references.bib
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+library(ggmap)
 library(here)
+library(arrow)
+
+analysis_data <- read_parquet(here("data/analysis_data/cleaned_fire_incidents.parquet"))
 ```
 
 
 # Introduction
 
-Fires pose a significant threat to both residential and commercial properties, often resulting in substantial financial losses and, more importantly, endangering lives. Developing a better understanding of the factors that influence the amount in damages per fire incident is crucial for implementing effective fire prevention measures to minimize the impact of such incidents. In this analysis, we delve into the extensive dataset provided by Toronto Open Data [@citeTorontoFireIncidents] which captures fire incidents within the Toronto area as defined by Ontario Fire Marshal (OFM) from 2011 to 2022. Through this dataset, we aim to predict the estimated dollar loss per fire incident across different property uses and identify the factors contributing to these losses.
+Fires pose a significant threat to both residential and commercial properties, often resulting in substantial financial losses and, more importantly, endangering lives. Developing a better understanding of the factors that influence the amount in damages per fire incident is crucial for implementing effective fire prevention measures to minimize the impact of such incidents. In this analysis, I delve into the extensive dataset provided by Toronto Open Data [@citeTorontoFireIncidents] which captures fire incidents within the Toronto area as defined by Ontario Fire Marshal (OFM) from 2011 to 2022. Through this dataset, I aim to predict the estimated dollar loss per fire incident across different property uses and identify the factors contributing to these losses.
 
-The motivation behind this analysis is that fire safety matters and is important. Beyond the protection of assets, it's about keeping people safe. In order to ensure the safety of fellow Canadians, it is imperative to comprehend the underlying patterns and determinants of fire incident. By dissecting the data provided by Toronto Open Data, we seek to not only predict the estimated amount in damages but also to identify significant factors influencing these losses. Analyzing factors such as Toronto Fire Services' response time, area of origin, and the presence, functionality, and configuration of fire alarms. These additional variables are essential in understanding the dynamics of fire incidents and formulating informed strategies for fire prevention and mitigation.
+The motivation behind this analysis is that fire safety matters and is important. Beyond the protection of assets, it's about keeping people safe. In order to ensure the safety of fellow Canadians, it is imperative to comprehend the underlying patterns and determinants of fire incident. By dissecting the data provided by Toronto Open Data, I seek to not only predict the estimated amount in damages but also to identify significant factors influencing these losses. Analyzing factors such as Toronto Fire Services' response time, area of origin, and the presence, functionality, and configuration of fire alarms. These additional variables are essential in understanding the dynamics of fire incidents and formulating informed strategies for fire prevention and mitigation.
 
-Despite the abundance of data available, there remains a gap in comprehensively analyzing the factors contributing to the estimated dollar loss per fire incident in the Toronto area. To address this gap, we employ a data-driven approach, utilizing statistical modeling techniques to uncover patterns and relationships within the dataset. Our methodology involves exploring various factors such as property use, possible causes of the incident (e.g., mechanical/electrical failures), and the presence of functioning fire alarms. Additionally, we incorporate the number of responding personnel from the Toronto Fire Services (TFS) as a variable to assess its impact on the estimated dollar loss.
+Despite the abundance of data available, there remains a gap in comprehensively analyzing the factors contributing to the estimated dollar loss per fire incident in the Toronto area. To address this gap, I employ a data-driven approach, utilizing statistical modeling techniques to uncover patterns and relationships within the dataset. Our methodology involves exploring various factors such as property use, possible causes of the incident (e.g., mechanical/electrical failures), and the presence of functioning fire alarms. Additionally, I incorporate the number of responding personnel from the Toronto Fire Services (TFS) as a variable to assess its impact on the estimated dollar loss.
 
-The findings of this analysis hold significant implications for fire safety practices and policies in the Toronto area. By understanding the factors influencing the estimated dollar loss per fire incident, stakeholders can prioritize resources and allocate them accordingly to mitigate fire risks effectively. This paper is structured as follows: we first provide an overview of the dataset and variables of interest, followed by the methodology employed for analysis in @sec-data. Subsequently, we present our findings, discussing the relationships uncovered and their implications for fire safety in @sec-results. Finally, we conclude by highlighting the importance of our findings and suggesting avenues for future research in this domain concerning fire safety in @sec-discussion.
+The findings of this analysis hold significant implications for fire safety practices and policies in the Toronto area. By understanding the factors influencing the estimated dollar loss per fire incident, stakeholders can prioritize resources and allocate them accordingly to mitigate fire risks effectively. This paper is structured as follows: I first provide an overview of the dataset and variables of interest, followed by the methodology employed for analysis in sec-data. Subsequently, I present our findings, discussing the relationships uncovered and their implications for fire safety in sec-results. Finally, I conclude by highlighting the importance of our findings and suggesting avenues for future research in this domain concerning fire safety in sec-discussion.
 
-# Data {#sec-data}
+# Data
 
-All data collection and analysis was completed using statistical tools such as R [@citeR], and Rstudio IDE [@citeRStudio] to better streamline workflow. The analysis was done using the R program and the following supporting packages: `tidyverse` [@citeTidyverse], `dplyr` [@citeDplyr], `here` [@citeHere], `opendatatoronto` [@citeOpenDataToronto] and `ggplot2` [@citeGgplot2]. Further details regarding data cleaning and analysis will be discussed in the following subsections.
+All data collection and analysis was completed using statistical tools such as R [@citeR], and Rstudio IDE [@citeRStudio] to better streamline workflow. The analysis was done using the R program and the following supporting packages: `tidyverse` [@citeTidyverse], `dplyr` [@citeDplyr], `here` [@citeHere], `opendatatoronto` [@citeOpenDataToronto], `ggplot2` [@citeGgplot2], `ggmap` [@citeGgmap], `lubridate` [@citeLubridate], and `scales` [@citeScales]. Further details regarding data cleaning and analysis will be discussed in the following subsections.
 
 
-# Model {#sec-model}
+# Model 
 
 Work in progress.
 
@@ -56,14 +60,81 @@ Work in progress.
 Work in progress.
 
 
-# Results {#sec-results}
+# Results
 
-Work in progress.
+```{r graph1, fig.cap="Number of Fire Incidents in Toronto by Year (2011-2022)"}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-1
 
+# bar plot of the number of fire incidents per year in Toronto from 2011 to 2022
+fig_1_data <- analysis_data %>%
+  mutate(year= year(tfs_alarm_time))
 
-# Discussion {#sec-discussion}
+fig_1_data <- fig_1_data %>%
+  group_by(year) %>%
+  summarize(incident_count = n())
 
-## First discussion point {#sec-first-point}
+ggplot(fig_1_data, aes(x = factor(year), y = incident_count)) +
+  geom_bar(stat = "identity", fill = "navyblue") +
+  geom_text(aes(label = incident_count), vjust = -0.5, size = 3) +
+  labs(x = "Year", y = "Number of Incidents") +
+  theme_minimal()
+```
+
+@fig-1 testing testing hello.
+
+```{r graph2, fig.cap="Average Estimated Dollar Loss by Group Area of Origin"}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-2
+
+# bar plot of average dollar loss by area of origin
+fig_2_data <- analysis_data %>%
+  group_by(area_of_origin) %>%
+  summarize(avg_dollar_loss = round(mean(estimated_dollar_loss, na.rm = TRUE), 0))
+
+ggplot(fig_2_data, aes(x = area_of_origin, y = avg_dollar_loss)) +
+  geom_bar(stat = "identity", fill = "navyblue") +
+  geom_text(aes(label = scales::dollar(avg_dollar_loss)), vjust = -0.5, size = 3) +
+  labs(x = "Area of Origin", y = "Average Dollar Loss") +
+  scale_y_continuous(labels = scales::dollar) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+@fig-2 testing testing hello
+
+```{r graph3, fig.cap="Fire Incidents Heatmap in Toronto"}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-3
+
+# heatmap of Toronto's fire incidents
+# https://docs.stadiamaps.com/tutorials/getting-started-in-r-with-ggmap/
+incident_location <- analysis_data %>%
+  select(
+    longitude,
+    latitude
+  )
+
+qmplot(longitude,
+       latitude,
+       data = incident_location,
+       maptype = "stamen_toner_lite",
+       color = I("red"), size = I(1),
+       alpha = I(0.05))
+
+```
+
+@fig-3 testing testing hello
+
+# Discussion 
+
+## First discussion point
 
 Work in progress.
 
@@ -97,7 +168,7 @@ Work in progress.
 Work in progress.
 
 
-# Model details {#sec-model-details}
+# Model details
 
 Work in progress.
 

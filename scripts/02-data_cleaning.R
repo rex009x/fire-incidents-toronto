@@ -54,6 +54,31 @@ cleaned_fire_incidents_data <- cleaned_fire_incidents_data %>%
           tfs_alarm_time,
           tfs_arrival_time)
 
+# a function to group area_of_origin into broader categories
+group_areas <- function(area) {
+  if (grepl("Living|Sleeping|Dining|Cooking|Washroom|Sauna|Laundry|Closet", area)) {
+    return("Living and Common Areas")
+  } else if (grepl("Storage|Locker|Garage|Trash|Basement|Elevator|Chimney|Mechanical|Ducting|Utility|Awning|Porch|Crawl Space|Concealed|Attic|Open Area|Court|Parking|Fuel|Deck", area)) {
+    return("Storage and Structural")
+  } else if (grepl("Engine|Running Gear|Electrical|Fuel|Operator|Passenger|Trunk|Cargo|Vehicle", area)) {
+    return("Vehicle Components")
+  } else if (grepl("Manufacturing|Assembly|Laboratory|Operating Room|Performance|Backstage", area)) {
+    return("Functional and Performance Areas")
+  } else if (grepl("Office|Sales, Showroom|Records", area)) {
+    return("Office and Sales")
+  } else if (grepl("Entranceway|Hallway|Stairway|Court, Atrium|Other Means of Egress", area)) {
+    return("Entrance and Exit")
+  } else if (grepl("Exterior Wall|Roof|Concealed|Wall|Structural|Attic|Open Area|Court|Patio|Terrace", area)) {
+    return("Outside Areas")
+  } else if (grepl("Multiple|Residential/Business|Other - unclassified|Undetermined|Under Investigation", area)) {
+    return("Other/Undetermined")
+  } else {
+    return("Other")
+  }
+}
+
+cleaned_fire_incidents_data$area_of_origin <- sapply(cleaned_fire_incidents_data$area_of_origin, group_areas)
+
 #### Save data ####
 # write cleaned data as csv and parquet
 write_csv(

@@ -33,3 +33,115 @@ Despite the abundance of data available, there remains a gap in comprehensively 
 **Significance and Structure:**
 
 The findings of this analysis hold significant implications for fire safety practices and policies in the Toronto area. By understanding the factors influencing the estimated dollar loss per fire incident, stakeholders can prioritize resources and implement targeted interventions to mitigate fire risks effectively. This paper is structured as follows: we first provide an overview of the dataset and variables considered, followed by the methodology employed for analysis. Subsequently, we present our findings, discussing the relationships uncovered and their implications for fire safety. Finally, we conclude by highlighting the importance of our findings and suggesting avenues for future research in this domain.
+
+User
+
+I am having issues with my resulting graph as there are too many x values or unique area_of_origin values which is making the graph extremely wide and small. Here is the list of unique areas of origin for the fire incidents:
+
+ [1] "11 - Lobby, Entranceway"                                                  
+ [2] "12 - Hallway, Corridor"                                                   
+ [3] "13 - Stairway, Escalator"                                                 
+ [4] "18 - Covered Court, Atrium, mall concourse"                               
+ [5] "19 - Other Means of Egress"                                               
+ [6] "21 - Living Area (e.g. living, TV, recreation, etc)"                      
+ [7] "22 - Sleeping Area or Bedroom (inc. patients room, dormitory, etc)"       
+ [8] "23 - Dining or Beverage Area (inc mess, canteen, lunchroom, cafeteria"    
+ [9] "24 - Cooking Area or Kitchen"                                             
+[10] "25 - Washroom or Bathroom (toilet,restroom/locker room)"                  
+[11] "26 - Sauna"                                                               
+[12] "27 - Laundry Area"                                                        
+[13] "28 - Office"                                                              
+[14] "29 - Electronic Equipment"                                                
+[15] "30 - Sales, Showroom Area"                                                
+[16] "31 - Process Manufacturing (inc manf, prod assembly, repair)"             
+[17] "32 - Assembly Area (inc school room,spectator area, church, etc)"         
+[18] "33 - Laboratory"                                                          
+[19] "34 - Operating Room, Treatment or Examination Area"                       
+[20] "35 - Performance Area (inc stage, rink, boxing ring, gym floor, altar"    
+[21] "36 - Backstage, dressing room"                                            
+[22] "39 - Other Functional Area"                                               
+[23] "41 - Closet (eg. clothes, broom, linen closet, etc.)"                     
+[24] "42 - Garage"                                                              
+[25] "43 - Locker (apartment storage)"                                          
+[26] "44 - Trash, Rubbish Storage (inc garbage chute room, garbage/industri"    
+[27] "45 - Supply Storage Room (inc maintenance/office/document storage, et"    
+[28] "46 - Product Storage (inc products or materials awaiting manuf, assembly)"
+[29] "47 - Shipping/Receiving/Loading Platform"                                 
+[30] "48 - Records storage area (inc vaults)"                                   
+[31] "49 - Other Storage Area"                                                  
+[32] "50 - Basement/cellar (not partitioned)"                                   
+[33] "51 - Elevator (includes shaft)"                                           
+[34] "52 - HVAC Equipment Room (furnace room, water heater closet, boiler)"     
+[35] "53 - Chimney/Flue Pipe"                                                   
+[36] "54 - Incinerator Room"                                                    
+[37] "55 - Mechanical/Electrical Services Room"                                 
+[38] "56 - Conveyor Shaft or Chute (inc dumbwaiter, laundry chute, garbage"     
+[39] "57 - Ducting - Heating, Air Conditioning"                                 
+[40] "58 - Ducting - Exhaust (inc cooking, fumes, etc.)"                        
+[41] "59 - Utility Shaft (eg. electrical wiring/phone, etc.)"                   
+[42] "60 - Other Building Services/Support Facilities"                          
+[43] "61 - Exterior Wall"                                                       
+[44] "62 - Roof"                                                                
+[45] "63 - Awning or Canopy"                                                    
+[46] "64 - Porch or Balcony"                                                    
+[47] "65 - Crawl Space (includes sub-structure)"                                
+[48] "66 - Concealed Ceiling Area"                                              
+[49] "67 - Concealed Floor Area"                                                
+[50] "68 - Concealed Wall Area"                                                 
+[51] "69 - Attic Area"                                                          
+[52] "70 - Other Structural Area"                                               
+[53] "71 - Open Area (inc lawn, field, farmyard, park, playing field, pier,"    
+[54] "72 - Court, Patio, Terrace"                                               
+[55] "73 - Parking Area, Parking Lot"                                           
+[56] "74 - Storage Area (outside)"                                              
+[57] "75 - Trash, rubbish area (outside)"                                       
+[58] "76 - Fuel Dispensing Area (outside)"                                      
+[59] "78 - Attached Deck"                                                       
+[60] "79 - Other Outside Area"                                                  
+[61] "81 - Engine Area"                                                         
+[62] "82 - Running Gear (inc wheels and braking systems, transmission syste"    
+[63] "83 - Electrical Systems"                                                  
+[64] "84 - Fuel Systems (eg. fuel tank, etc.)"                                  
+[65] "85 - Operator/Control Area"                                               
+[66] "86 - Passenger Area"                                                      
+[67] "87 - Trunk/Cargo Area"                                                    
+[68] "89 - Other Vehicle Area"                                                  
+[69] "91 - Multiple Areas of Origin"                                            
+[70] "92 - Residential/Business: Restaurant area"                               
+[71] "93 - Residential/Business: Other busines area"                            
+[72] "97 - Other - unclassified"                                                
+[73] "99 - Undetermined  (formerly 98)"                                         
+[74] "990 - Under Investigation"    
+
+Can you propose a solution to resolve this? Perhaps grouping/categorizing the areas under some terms that capture the areas?
+
+ChatGPT
+
+When dealing with a large number of categories, it's often helpful to group or categorize them into broader categories to make the visualization more manageable and interpretable. Here's one approach to group the area_of_origin into broader categories:
+
+R
+
+# Define a function to group areas into broader categories
+group_areas <- function(area) {
+  if (grepl("Living|Sleeping|Dining|Cooking|Washroom|Sauna|Laundry|Closet", area)) {
+    return("Living and Common Areas")
+  } else if (grepl("Storage|Locker|Garage|Trash|Basement|Elevator|Chimney|Mechanical|Ducting|Utility|Awning|Porch|Crawl Space|Concealed|Attic|Open Area|Court|Parking|Fuel|Deck", area)) {
+    return("Storage and Structural")
+  } else if (grepl("Engine|Running Gear|Electrical|Fuel|Operator|Passenger|Trunk|Cargo|Vehicle", area)) {
+    return("Vehicle Components")
+  } else if (grepl("Manufacturing|Assembly|Laboratory|Operating Room|Performance|Backstage", area)) {
+    return("Functional and Performance Areas")
+  } else if (grepl("Office|Sales, Showroom|Records", area)) {
+    return("Office and Sales")
+  } else if (grepl("Entranceway|Hallway|Stairway|Court, Atrium|Other Means of Egress", area)) {
+    return("Entrance and Exit")
+  } else if (grepl("Exterior Wall|Roof|Concealed|Wall|Structural|Attic|Open Area|Court|Patio|Terrace", area)) {
+    return("Outside Areas")
+  } else if (grepl("Multiple|Residential/Business|Other - unclassified|Undetermined|Under Investigation", area)) {
+    return("Other/Undetermined")
+  } else {
+    return("Other")
+  }
+}
+
+Adjust the grouping function as needed to capture the most relevant categories for your analysis.
