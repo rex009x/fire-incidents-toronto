@@ -1,8 +1,8 @@
-# Evaluating Toronto's Fire Incidents to Extrapolate Future Occurrence Data
+# Toronto's Fire Incidents and Contributing Factors: An Explorative Analysis
 
 ## Overview
 
-This paper uses publicly available data from [Toronto Open Data](https://open.toronto.ca/) to predict the estimated dollar loss per fire incident in the Toronto area by property use. Further analysis of Toronto Fire Services' response time, area of origin, and various fire prevention measures as considering factors in the estimation. The results reveal a positive correlation between estimated dollar loss and possible causes of the incident, namely, mechanical/electrical failures yielding the highest loss. These findings bring urgency to fire safety as they highlight the importance of proper education, maintenance, and safety inspections. This analysis encourages homeowners, businesses, and property managers to take initiative in order to ensure the well-being of others.
+This paper uses publicly available data from [Toronto Open Data](https://open.toronto.ca/) to identify contributing factors to fire incidents and their resulting financial losses. Further analysis of Toronto Fire Services' response time, area of origin, and various fire prevention measures as considering factors in the estimation. The results reveal a positive correlation between estimated dollar loss and possible causes of the incident, namely, mechanical/electrical failures yielding the highest loss. These findings bring urgency to fire safety as they highlight the importance of proper education, maintenance, and safety inspections. This analysis encourages homeowners, businesses, and property managers to take initiative in order to ensure the well-being of others.
 
 
 ## File Structure
