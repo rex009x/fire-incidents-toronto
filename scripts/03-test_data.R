@@ -54,8 +54,10 @@ all(cleaned_fire_incidents_data$smoke_alarm_at_fire_origin != '')
 all(cleaned_fire_incidents_data$smoke_alarm_at_fire_origin_alarm_failure != '')
 all(cleaned_fire_incidents_data$smoke_alarm_at_fire_origin_alarm_type != '')
 
-min(cleaned_fire_incidents_data$tfs_alarm_time) > as.Date("2010/12/31")
-max(cleaned_fire_incidents_data$tfs_alarm_time) < as.Date("2023/01/01")
+min(cleaned_fire_incidents_data$tfs_alarm_time) > as.POSIXct("2010/12/31")
+max(cleaned_fire_incidents_data$tfs_alarm_time) < as.POSIXct("2023/01/01")
 
-min(cleaned_fire_incidents_data$tfs_arrival_time) > as.Date("2010/12/31")
-max(cleaned_fire_incidents_data$tfs_arrival_time) < as.Date("2023/01/01")
+
+min(cleaned_fire_incidents_data$tfs_arrival_time) > as.POSIXct("2010/12/31")
+max(cleaned_fire_incidents_data$tfs_arrival_time) < as.POSIXct("2023/01/01")
+

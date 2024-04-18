@@ -1,4 +1,4 @@
-# Toronto's Fire Incidents and Contributing Factors: An Explorative Analysis
+# Toronto's Fire Incidents and Contributing Factors: An Exploratory Data Analysis
 
 ## Overview
 
