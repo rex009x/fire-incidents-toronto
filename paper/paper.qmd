@@ -29,40 +29,44 @@ library(arrow)
 analysis_data <- read_parquet(here("data/analysis_data/cleaned_fire_incidents.parquet"))
 ```
 
-
+\newpage
 # Introduction
 
-Fires pose a significant threat to both residential and commercial properties, often resulting in substantial financial losses and, more importantly, endangering lives. Developing a better understanding of the factors that influence the amount in damages per fire incident is crucial for implementing effective fire prevention measures to minimize the impact of such incidents. In this analysis, I delve into the extensive dataset provided by Toronto Open Data [@citeTorontoFireIncidents] which captures fire incidents within the Toronto area as defined by Ontario Fire Marshal (OFM) from 2011 to 2022. Through this dataset, I aim to predict the estimated dollar loss per fire incident across different property uses and identify the factors contributing to these losses.
+Fires pose a significant threat to both residential and commercial properties, often resulting in substantial financial losses and, more importantly, endangering lives. Developing a better understanding of the factors that influence the damage of fire incidents is crucial for implementing effective fire prevention measures to minimize the impact of such incidents. In this analysis, I explore the dataset provided by Toronto Open Data [@citeTorontoFireIncidents] which captures fire incidents from 2011 to 2022 within the Toronto area as defined by the Ontario Fire Marshal (OFM). Through this dataset, I aim to identify contributing factors to fire incidents and their resulting financial losses.
 
-The motivation behind this analysis is that fire safety matters and is important. Beyond the protection of assets, it's about keeping people safe. In order to ensure the safety of fellow Canadians, it is imperative to comprehend the underlying patterns and determinants of fire incident. By dissecting the data provided by Toronto Open Data, I seek to not only predict the estimated amount in damages but also to identify significant factors influencing these losses. Analyzing factors such as Toronto Fire Services' response time, area of origin, and the presence, functionality, and configuration of fire alarms. These additional variables are essential in understanding the dynamics of fire incidents and formulating informed strategies for fire prevention and mitigation.
+The motivation behind this analysis stems from the importance of fire safety. Beyond the protection of assets, it's about keeping people safe. To ensure the safety of fellow Canadians, it is imperative to comprehend the underlying patterns and determinants of fire incident. Analyzing factors such as the fire's area of origin, and the presence, functionality, and configuration of fire alarms. These additional variables are essential in understanding the dynamics of fire incidents and formulating informed strategies for fire prevention and mitigation.
 
-Despite the abundance of data available, there remains a gap in comprehensively analyzing the factors contributing to the estimated dollar loss per fire incident in the Toronto area. To address this gap, I employ a data-driven approach, utilizing statistical modeling techniques to uncover patterns and relationships within the dataset. Our methodology involves exploring various factors such as property use, possible causes of the incident (e.g., mechanical/electrical failures), and the presence of functioning fire alarms. Additionally, I incorporate the number of responding personnel from the Toronto Fire Services (TFS) as a variable to assess its impact on the estimated dollar loss.
+Despite the abundance of data available, there remains a gap in analyzing the factors that contributing to the estimated dollar loss per fire incident in the Toronto area such as sociological factors. To address this gap, I employ a data-driven approach, utilizing explorative data analysis techniques to reveal patterns and relationships within the dataset. My methodology involves exploring various factors such as property use, possible causes of the incident (e.g., mechanical/electrical failures), and the presence of functioning fire alarms. Additionally, I incorporate the number of responding personnel from the Toronto Fire Services (TFS) as a variable to assess its impact on the estimated dollar loss.
 
-The findings of this analysis hold significant implications for fire safety practices and policies in the Toronto area. By understanding the factors influencing the estimated dollar loss per fire incident, stakeholders can prioritize resources and allocate them accordingly to mitigate fire risks effectively. This paper is structured as follows: I first provide an overview of the dataset and variables of interest, followed by the methodology employed for analysis in sec-data. Subsequently, I present our findings, discussing the relationships uncovered and their implications for fire safety in sec-results. Finally, I conclude by highlighting the importance of our findings and suggesting avenues for future research in this domain concerning fire safety in sec-discussion.
+The findings of this analysis hold significant implications for fire safety practices and policies in the Toronto area. 
 
-# Data
+By understanding the factors influencing fire incidents and their associated financial losses, stakeholders can prioritize resources and allocate them accordingly to mitigate fire risks effectively. This paper is structured as follows: I first provide an overview of the dataset and variables of interest, followed by the methodology employed for analysis in @sec-data. Subsequently, I present my findings, discussing the relationships uncovered and their implications for fire safety in @sec-results. Finally, I conclude by highlighting the importance of the results by discussing the current laws and regulations in place and suggest avenues for future research in the domain of fire safety in @sec-discussion.
 
-All data collection and analysis was completed using statistical tools such as R [@citeR], and Rstudio IDE [@citeRStudio] to better streamline workflow. The analysis was done using the R program and the following supporting packages: `tidyverse` [@citeTidyverse], `dplyr` [@citeDplyr], `here` [@citeHere], `opendatatoronto` [@citeOpenDataToronto], `ggplot2` [@citeGgplot2], `ggmap` [@citeGgmap], `lubridate` [@citeLubridate], and `scales` [@citeScales]. Further details regarding data cleaning and analysis will be discussed in the following subsections.
+# Data {#sec-data}
 
+All data collection and analysis was completed using statistical tools such as R [@citeR], and Rstudio IDE [@citeRStudio] to better streamline workflow. The analysis was done using the R program and the following supporting packages: `tidyverse` [@citeTidyverse], `dplyr` [@citeDplyr], `here` [@citeHere], `opendatatoronto` [@citeOpenDataToronto], `ggplot2` [@citeGgplot2], `ggmap` [@citeGgmap], `arrow` [@citeArrow], `lubridate` [@citeLubridate], and `scales` [@citeScales]. Further details regarding data cleaning, variables of interest, and measurement methodologies will be discussed in the following subsections.
 
-# Model 
+## Data Source and Collection
 
-Work in progress.
+The data for this paper was acquired through the R package `opendatatoronto` [@citeOpenDataToronto], which provides publicly available datasets to be freely used, reused, and redistributed. Specifically, the "Fire Incidents" dataset is used as the basis of this analysis as it contains information regarding fire incidents in the area of Toronto provided by the Toronto Fire Services (TFS). The dataset captures incidents from the beginning of the year 2011 to the end of 2022. It is important to note that the dataset only includes incidents as defined by the Ontario Fire Marshal [@citeOFM].
 
+## Variables of Interest
 
-## Model set-up
+The dataset acquired contains various data points for analysis, but I only concern myself with a select few. In particular, the incident's area of origin, the estimated dollars loss in damages, the longitude and latitude of the incident, the number of responding personnel from the TFS, the possible causes of the incident, the determined property use, the presence, functionality and configuration of fire alarms, and finally the TFS notification and arrival time to the incidents.
 
-Work in progress.
+## Measurement
 
+The methodologies behind the dataset's measurement is meticulously organized to account for scalability. Throughout the dataset, there are classifications methods used in scenarios where many instances require categorization. This is a decision that made with the concept of scalability in mind as there are far too many descriptors in the real world to account such that a singular description sufficiently and accurately describes the events of each incident. For example, regarding the area of origin, the raw data directly from Toronto's Open Data contains 74 unique classifications for an area of origin. The authors of the dataset hold the responsibility to properly assign the classification of each incident. This may result in inaccurate classifications without a clearly defined outline of what differentiates one from another.
 
-### Model justification
+One difficulty with measuring data concerning fire incidents is the nature of fire; fire is destructive and has the capacity to reduce tangible data to ash. The dataset has many instances of undetermined data which is likely related to nature of the incident. Taking a look at the types of smoke alarms at the locations of these incidents, nearly a fifth of all incidents recorded from 2011 to 2022 in Toronto are undetermined. While there may be numerous justifications for such values, it is difficult to analyze the data without disregarding a large portion of data, potentially leading to inconsistencies in the analysis and measurement errors.
 
-Work in progress.
+The dataset's concern for privacy is a bit alarming in regards to the provided latitude and longitude data points. The dataset contains information regarding the incident's nearest intersection which is generally comprised of two streets. While this alone does not breach the privacy of the victims of the fire incident, the latitude and longitude measurements bring you directly to the location of the incident. This may not be a concern for those two reside within high-rise apartments, but when considering detached homes with unique home addresses, this does raise some privacy concerns.
 
+# Results {#sec-results}
 
-# Results
+In @fig-1, we can see the total number of fire incidents that occur each year from 2011 to 2022 in Toronto. While there is not much to decipher, we find that the number is relatively similar each year for the past decade. While some may argue that fire incidents have not reduced or increased substantially each year, another way of interpreting these numbers is that fire incidents have maintained a stable and infrequent occurrence in Toronto.
 
-```{r graph1, fig.cap="Number of Fire Incidents in Toronto by Year (2011-2022)"}
+```{r graph1, fig.cap="Number of fire incidents in Toronto by Year (2011-2022)"}
 #| echo: false
 #| warning: false
 #| message: false
@@ -83,35 +87,12 @@ ggplot(fig_1_data, aes(x = factor(year), y = incident_count)) +
   theme_minimal()
 ```
 
-@fig-1 testing testing hello.
-
-```{r graph2, fig.cap="Average Estimated Dollar Loss by Group Area of Origin"}
+The dataset captures fire incidents that occur and are reported for the Toronto Fire Services and @fig-2 depicts where these incidents are located geographically. We can observe a greater number of incidents taking place in the heart of Toronto. This is likely due to the higher concentration of people with a population density of 3,088 persons per square kilometer which is the densest urban area or population centre in North America [@citeCensus2021]. Looking further away from the city center, we find a higher concentration of incidents in the form of vertical lines that follow major roadways. Simply looking at the raw fire incident data, we find vehicles to be the third highest contributing factor to the source of ignition when considering electrical and mechanical incidents.
+```{r graph2, fig.cap="Heatmap of Toronto's fire incidents (2011-2022)"}
 #| echo: false
 #| warning: false
 #| message: false
 #| label: fig-2
-
-# bar plot of average dollar loss by area of origin
-fig_2_data <- analysis_data %>%
-  group_by(area_of_origin) %>%
-  summarize(avg_dollar_loss = round(mean(estimated_dollar_loss, na.rm = TRUE), 0))
-
-ggplot(fig_2_data, aes(x = area_of_origin, y = avg_dollar_loss)) +
-  geom_bar(stat = "identity", fill = "navyblue") +
-  geom_text(aes(label = scales::dollar(avg_dollar_loss)), vjust = -0.5, size = 3) +
-  labs(x = "Area of Origin", y = "Average Dollar Loss") +
-  scale_y_continuous(labels = scales::dollar) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-
-@fig-2 testing testing hello
-
-```{r graph3, fig.cap="Fire Incidents Heatmap in Toronto"}
-#| echo: false
-#| warning: false
-#| message: false
-#| label: fig-3
 
 # heatmap of Toronto's fire incidents
 # https://docs.stadiamaps.com/tutorials/getting-started-in-r-with-ggmap/
@@ -126,32 +107,62 @@ qmplot(longitude,
        data = incident_location,
        maptype = "stamen_toner_lite",
        color = I("red"), size = I(1),
-       alpha = I(0.05))
-
+       alpha = I(0.05)
+       )
 ```
 
-@fig-3 testing testing hello
+Looking at @fig-3, the plot illustrates the average dollar loss in damages from fire incidents across various categorized areas of origin. Each bar representing a distinct area of origin, with the height indicating the average amount in damages. The categories with the highest average amount in damages all share the fact they are all highly populated areas or require the utmost fire safety precaution. While the leading area of origin is "other/undetermined", it is largely because of the dataset was unable to classify the incident to one particular area hence the high estimated loss due to damages. The largest estimated dollar loss recorded in the dataset which is estimated at $50 million occurred on May 7, 2019 at the York Memorial Collegiate Institute [@citeLargestCostFire]. This is one example of an incident that is categorized under "other/undetermined" which resulted in a high dollar loss. As there are far too many classifications for large buildings that may serve many purposes, it is likely the reason such area of origin is leading.
 
-# Discussion 
+```{r graph3, fig.cap="Average estimated dollar loss by grouped area of origin", fig.asp=1.0}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-3
+
+# bar plot of average dollar loss by grouped area of origin
+fig_2_data <- analysis_data %>%
+  group_by(area_of_origin) %>%
+  summarize(avg_dollar_loss = round(mean(estimated_dollar_loss, na.rm = TRUE), 0))
+
+ggplot(fig_2_data, aes(x = area_of_origin, y = avg_dollar_loss)) +
+  geom_bar(stat = "identity", fill = "navyblue") +
+  geom_text(aes(label = scales::dollar(avg_dollar_loss)), vjust = -0.5, size = 3) +
+  labs(x = "Area of Origin", y = "Average Dollar Loss") +
+  scale_y_continuous(labels = scales::dollar) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+@fig-4 shows the number of each type of smoke alarms found present during fire incidents in Toronto from 2011 to 2022.  Each bar representing a specific type or configuration of smoke alarm, while the height corresponds to the number of fire incidents associated with that particular fire alarm. We can see wireless smoke alarms to be the lowest number of smoke alarms found at the location of the incidents with the remaining smoke alarm types being within a reasonable range of each other. No alarm/undetermined is the most frequent which is likely related to the nature of the emergency as fire alarms may have been destroyed as a result.
+```{r graph4, fig.cap="Number of each type of smoke alarm present during fire incidents in Toronto", fig.asp=0.9}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-4
+
+# bar plot of the number of each type of smoke alarm present during fire incidents
+fig_4_data <- analysis_data %>%
+  filter(smoke_alarm_at_fire_origin_alarm_type != "9 - Type undetermined") %>% # ignore undetermined values
+  group_by(smoke_alarm_at_fire_origin_alarm_type) %>%
+  summarize(count = n())
+
+ggplot(fig_4_data, aes(x = smoke_alarm_at_fire_origin_alarm_type, y = count)) +
+  geom_bar(stat = "identity", fill = "navyblue") +
+  geom_text(aes(label = count), vjust = -0.5, size = 3) +
+  labs(x = "Smoke Alarm Type", y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+# Discussion {#sec-discussion}
 
 ## First discussion point
 
-Work in progress.
-
-
-## Second discussion point
-
-Work in progress.
-
-
-## Third discussion point
-
-Work in progress.
-
+This analysis shows that while there are many contributing factors and places that fire may occur causing potentially life-altering financial loss or loss of life, there are only a few safety measures to be made that can mitigate such events from happening. The Government of Ontario outlines home fire safety information including precautionary measures, laws and regulations regarding fire safety that is imperative for any homeowner, landlord, and tenant to ensure the safety of those around you [@citeFireSafety]. While it is required for every home to have a smoke alarm on every story, the City of Toronto recommends replacing the batteries of your smoke alarms every two years [@citeFireSafetyToronto]. As most fatal fires occur at night when people are asleep, after seeing the types of fire alarms present at fire incidents in @fig-4, it is advised that fire alarms be interconnected which would trigger all connected alarms if one where to ever activate. Making such change would be an incentive for public safety and also promote fire safety for all of those who reside within multiple unit dwellings especially in the busy city of Toronto. There are many systems that are already in place as preventative measures for the threat of fires almost everywhere today. From our schools to the underground subways, fire safety is present, but it is everyone's responsibility to be aware and understand the necessary procedures in the event of a fire. While Toronto is renowned for its diversity, one thing most would agree with is that fire has the capacity to bring happiness, despair, or destruction. It is important to acknowledge fire safety as it saves lives, protects our belongings, and ensures the safety of our communities from the devastating impacts of fires.
 
 ## Weaknesses and next steps
 
-Work in progress.
+This analysis could be improved in regards to the consideration of sociological perspectives concerning peoples feelings towards fire safety. I believe discussing the awareness and sentiments towards fire safety and the steps they have taken to ensure the well-being for themselves and those around them. Including some survey or statistical evidence through a sociological lens would greatly benefit the overarching message of fire safety. Additionally, the analysis of the Toronto Fire Services response time to emergency calls could have been analyzed to determine whether or not it has changed in recent years as Toronto continues to increase in population.
 
 
 \newpage

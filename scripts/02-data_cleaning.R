@@ -77,7 +77,30 @@ group_areas <- function(area) {
   }
 }
 
-cleaned_fire_incidents_data$area_of_origin <- sapply(cleaned_fire_incidents_data$area_of_origin, group_areas)
+cleaned_fire_incidents_data$area_of_origin <-
+  sapply(cleaned_fire_incidents_data$area_of_origin, group_areas)
+
+# a function to clean and shorten the smoke alarm type values
+clean_smoke_alarm_names <- function(name) {
+  name_map <- c(
+    "8 - Not applicable - no smoke alarm or presence undetermined" = "No Alarm/Undetermined",
+    "2 - Hardwired (standalone)" = "Hardwired",
+    "1 - Battery operated" = "Battery Operated",
+    "4 - Interconnected" = "Interconnected",
+    "3 - Wireless" = "Wireless"
+  )
+  # Use the name map to clean the names
+  cleaned_name <- name_map[name]
+  # If the name is not found in the map, return the original name
+  if (is.na(cleaned_name)) {
+    return(name)
+  } else {
+    return(cleaned_name)
+  }
+}
+
+cleaned_fire_incidents_data$smoke_alarm_at_fire_origin_alarm_type <-
+  sapply(cleaned_fire_incidents_data$smoke_alarm_at_fire_origin_alarm_type, clean_smoke_alarm_names)
 
 #### Save data ####
 # write cleaned data as csv and parquet

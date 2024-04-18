@@ -145,3 +145,41 @@ group_areas <- function(area) {
 }
 
 Adjust the grouping function as needed to capture the most relevant categories for your analysis.
+
+User
+the values of the types of smoke alarms are very long and I wish to shorten them. Here are all the unique values:
+
+"8 - Not applicable - no smoke alarm or presence undetermined", [3] "2 - Hardwired (standalone)","1 - Battery operated", [5] "4 - Interconnected", "3 - Wireless"                                       
+
+can you write some R code that will clean these value names?
+
+ChatGPT
+
+Certainly! You can create a function to clean and shorten the names of the smoke alarm configurations. Here's how you can do it:
+
+```R
+# Define a function to clean and shorten the smoke alarm configuration names
+clean_smoke_alarm_names <- function(name) {
+  # Create a named vector to map original names to cleaned names
+  name_map <- c(
+    "8 - Not applicable - no smoke alarm or presence undetermined" = "No Alarm/Undetermined",
+    "2 - Hardwired (standalone)" = "Hardwired",
+    "1 - Battery operated" = "Battery Operated",
+    "4 - Interconnected" = "Interconnected",
+    "3 - Wireless" = "Wireless"
+  )
+  # Use the name map to clean the names
+  cleaned_name <- name_map[name]
+  # If the name is not found in the map, return the original name
+  if (is.na(cleaned_name)) {
+    return(name)
+  } else {
+    return(cleaned_name)
+  }
+}
+
+# Test the function with an example
+clean_smoke_alarm_names("8 - Not applicable - no smoke alarm or presence undetermined")
+```
+
+This code defines a function called `clean_smoke_alarm_names` that takes a smoke alarm configuration name as input and returns a cleaned and shortened version of the name. Adjust the `name_map` vector as needed to map each original name to its corresponding cleaned name. You can then apply this function to the smoke alarm configuration names in your dataset.
